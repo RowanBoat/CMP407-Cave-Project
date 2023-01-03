@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class AudioDelayScript : MonoBehaviour
 {
-    public AudioSource source;
+    private AudioSource source;
+    private float waitTimeCountdown = -1f;
+
     public float minWaitBetweenPlays = 1f;
     public float maxWaitBetweenPlays = 5f;
-    public float waitTimeCountdown = -1f;
+    public float minPitch = -3f;
+    public float maxPitch = 3f;
 
     void Start()
     {
@@ -20,6 +23,7 @@ public class AudioDelayScript : MonoBehaviour
         {
             if (waitTimeCountdown < 0f)
             {
+                source.pitch = Random.Range(minPitch, maxPitch);
                 source.Play();
                 waitTimeCountdown = Random.Range(minWaitBetweenPlays, maxWaitBetweenPlays);
             }
