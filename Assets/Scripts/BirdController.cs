@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AudioDelayScript : MonoBehaviour
+public class BirdController : MonoBehaviour
 {
     private AudioSource source;
+    private Animator anim;
     private float waitTimeCountdown = -1f;
 
     public float minWaitBetweenPlays = 1f;
@@ -14,7 +15,10 @@ public class AudioDelayScript : MonoBehaviour
 
     void Start()
     {
+        // Insert Change
         source = GetComponent<AudioSource>();
+        anim = GetComponent<Animator>();
+        anim.Play("Base Layer.SBird2_Look_Anim", 0, Random.Range(0f, 0.8f));
     }
 
     void Update()
