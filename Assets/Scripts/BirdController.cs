@@ -15,7 +15,6 @@ public class BirdController : MonoBehaviour
 
     void Start()
     {
-        // Insert Change
         source = GetComponent<AudioSource>();
         anim = GetComponent<Animator>();
         anim.Play("Base Layer.SBird2_Look_Anim", 0, Random.Range(0f, 0.8f));
