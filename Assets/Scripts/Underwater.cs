@@ -3,9 +3,8 @@ using System.Collections;
 
 public class Underwater : MonoBehaviour
 {
-    public float waterHeight;
-
     private bool isUnderwater;
+    private bool tempUnderwater;
     private Color normalColor;
     private Color underwaterColor;
 
@@ -19,25 +18,40 @@ public class Underwater : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if ((transform.position.y < waterHeight) != isUnderwater)
-        {
-            isUnderwater = transform.position.y < waterHeight;
-            if (isUnderwater) SetUnderwater();
-            if (!isUnderwater) SetNormal();
+        if (isUnderwater != tempUnderwater) 
+        {        
+            SetUnderwater(isUnderwater);
+            tempUnderwater = isUnderwater;
         }
     }
 
-    void SetNormal()
+    void OnTriggerEnter(Collider other)
     {
-        RenderSettings.fogColor = normalColor;
-        RenderSettings.fogDensity = 0.005f;
-
+        if (other.tag == "Water")
+        {
+            isUnderwater = true;
+        }
     }
 
-    void SetUnderwater()
+    void OnTriggerExit(Collider other)
     {
-        RenderSettings.fogColor = underwaterColor;
-        RenderSettings.fogDensity = 0.1f;
+        if (other.tag == "Water")
+        {
+            isUnderwater = false;
+        }
+    }
 
+    void SetUnderwater(bool Underwater)
+    {
+        if (Underwater)
+        {
+            RenderSettings.fogColor = underwaterColor;
+            RenderSettings.fogDensity = 0.1f;
+        }
+        else 
+        {
+            RenderSettings.fogColor = normalColor;
+            RenderSettings.fogDensity = 0.005f;
+        }
     }
 }
