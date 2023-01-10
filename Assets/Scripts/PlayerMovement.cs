@@ -48,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
 	///	AudioClip for our footstep sound.
 	public AudioClip footstepClip;
 	///	AudioClip for our jump sound.
-	public AudioClip jumpClip;
+	public AudioClip waterFootstepClip;
 	///	AudioClip for our jump land sound.
 	public AudioClip jumpLandClip;
 
@@ -61,6 +61,8 @@ public class PlayerMovement : MonoBehaviour
 	private float jumpAmount;
 	/// How much gravity to apply to the player (increases while they're falling).
 	private float gravity = 4.0f;
+
+	private bool isUnderwater = false;
 
 	///	Used to determine when to trigger footstep sounds.
 	private bool walking = false;
@@ -150,7 +152,14 @@ public class PlayerMovement : MonoBehaviour
 
 			if(walkCount > footstepRate)
 			{
-				playerSounds.PlayOneShot(footstepClip);
+				if (isUnderwater)
+				{
+					playerSounds.PlayOneShot(waterFootstepClip);
+				}
+				else
+				{
+					playerSounds.PlayOneShot(footstepClip);
+				}
 
 				walkCount = 0.0f;
 			}
@@ -165,12 +174,6 @@ public class PlayerMovement : MonoBehaviour
 			if(((jumpAmount <= 0.0f) && controller.isGrounded) ||
 			   ((jumpAmount > 0.0f) && (jumpAmount < 1.0f)))
 			{
-				
-				if(jumpAmount <= 0.0f)
-				{
-					playerSounds.PlayOneShot(jumpClip);
-				}
-
 				jumpAmount += Time.deltaTime * 5.0f;
 
 				jumpVector.y = 4.0f + ((1.0f - (jumpAmount * jumpAmount)) * 20.0f);
@@ -193,9 +196,9 @@ public class PlayerMovement : MonoBehaviour
 
 		//Apply gravity to the player's y-axis.
 		if(controller.isGrounded)
-			gravity = 7f;
-//		else if(gravity < 16.0f)
-//			gravity *= 1.06f;
+			gravity = 4.0f;
+		else if(gravity < 16.0f)
+			gravity *= 1.06f;
 
 		if(noclip)
 		{
@@ -217,4 +220,20 @@ public class PlayerMovement : MonoBehaviour
 		if(Input.GetKey("escape"))
 			Application.Quit();
 	}
+
+	void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Water")
+        {
+            isUnderwater = true;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Water")
+        {
+            isUnderwater = false;
+        }
+    }
 }

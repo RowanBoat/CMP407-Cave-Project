@@ -3,6 +3,10 @@ using System.Collections;
 
 public class Underwater : MonoBehaviour
 {
+    public GameObject player;
+    public GameObject cave;
+
+    private AudioSource ambience;
     private bool isUnderwater;
     private bool tempUnderwater;
     private Color normalColor;
@@ -13,6 +17,7 @@ public class Underwater : MonoBehaviour
     {
         normalColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
         underwaterColor = new Color(0.22f, 0.65f, 0.77f, 0.5f);
+        ambience = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -30,6 +35,7 @@ public class Underwater : MonoBehaviour
         if (other.tag == "Water")
         {
             isUnderwater = true;
+            ambience.Play();
         }
     }
 
@@ -38,20 +44,24 @@ public class Underwater : MonoBehaviour
         if (other.tag == "Water")
         {
             isUnderwater = false;
+            ambience.Stop();
         }
     }
 
-    void SetUnderwater(bool Underwater)
+    void SetUnderwater(bool isPlayerUnderwater)
     {
-        if (Underwater)
+        if (isPlayerUnderwater)
         {
+            cave.GetComponent<AudioSource>().pitch = 0.0f;
             RenderSettings.fogColor = underwaterColor;
             RenderSettings.fogDensity = 0.1f;
         }
         else 
         {
+            cave.GetComponent<AudioSource>().pitch = 1f;
             RenderSettings.fogColor = normalColor;
             RenderSettings.fogDensity = 0.005f;
         }
+        player.GetComponent<AudioSource>().mute = isPlayerUnderwater;
     }
 }
